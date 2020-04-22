@@ -15,19 +15,74 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.listen(3000, function() {
   console.log("Server started on port 3000");
 });
+
+app.get("/", function(req,res) {
+  // DOWNLOADS THE FILE TO USER (¬‿¬)
+  // res.sendFile(__dirname + "/views/home.ejs");
+  // let homeText = homeStartingContent;
+
+  res.render("home", { homePageText : homeStartingContent, homePosts : posts });
+});
+
+app.get("/posts/:postName", function(req,res) {
+  let requestTitle = req.params.postName;
+
+  console.log("Title requested: " + requestTitle);
+  posts.forEach(function(p) {
+    // console.log("Title checking: " + p.title);
+    if (requestTitle === p.title) {
+      console.log("Match found!");
+    } else {
+      console.log("No match found");
+    }
+  });
+
+});
+//Playing with express routing DOES WORK if you specify number of parameters@#@#@#!#
+app.get("/posts/:postName/user/:userName", function(req,res) {
+  console.log(req.params.postName);  
+  console.log(req.params.userName);
+});
+
+app.get("/about", function(req,res) {
+  res.render("about", { aboutPageText : aboutContent });
+});
+
+app.get("/contact", function(req,res) {
+  res.render("contact", { contactPageText : contactContent });
+});
+
+app.get("/compose", function(req,res) {
+  res.render("compose");
+});
+
+var posts = [];
+app.post("/compose", function(req,res) {
+  let postTitle = req.body.postTitle;
+  let postText = req.body.postText;
+
+  let post = {
+    title: postTitle,
+    text: postText
+  };
+  // You can just push an object into an array @)#($*@#)$*#@  
+  posts.push(post);
+  // posts.push({title: post.title , content: post.text});
+  res.redirect("/");
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
